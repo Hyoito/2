@@ -1,0 +1,140 @@
+package persistence;
+
+import models.ChosenWord;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import commons.Constants;
+
+public class ChosenWordRepositorySQLite implements ChosenWordRepository {
+
+	@Override
+	public ChosenWord[] findBy(int id) {
+		Connection con;
+		PreparedStatement prepStmt;
+		String sql = "SELECT * FROM Termo WHERE id = ? ";
+		try{
+			con = DriverManager.getConnection(Constants.URL);
+			prepStmt = con.prepareStatement(sql);
+			prepStmt.setInt(1, id);
+			ResultSet rs = prepStmt.executeQuery();
+			ChosenWord[] words = new ChosenWord[1];
+			
+			rs.next();
+			int cId = rs.getInt("id");
+			String cWord = rs.getString("word");
+
+			ChosenWord c = new ChosenWord(cId, cWord);
+			words[0] = c;
+			rs.close();
+			prepStmt.close();
+			con.close();
+			
+			return words;
+		} catch (SQLException e) {
+		e.printStackTrace();
+
+		return new ChosenWord[0];
+		}
+	}
+}
+
+-------------------
+package persistence;
+
+import models.ChosenWord;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import commons.Constants;
+
+public class ChosenWordRepositorySQLite implements ChosenWordRepository {
+
+	@Override
+	public ChosenWord[] findBy(int id) {
+		Connection con;
+		PreparedStatement prepStmt;
+		String sql = "SELECT * FROM Termo WHERE id = ? ";
+		try{
+			con = DriverManager.getConnection(Constants.URL);
+			prepStmt = con.prepareStatement(sql);
+			prepStmt.setInt(1, id);
+			ResultSet rs = prepStmt.executeQuery();
+			ChosenWord[] words = new ChosenWord[1];
+			
+			rs.next();
+			int cId = rs.getInt("id");
+			String cWord = rs.getString("word");
+
+			ChosenWord c = new ChosenWord(cId, cWord);
+			words[0] = c;
+			rs.close();
+			prepStmt.close();
+			con.close();
+			
+			return words;
+		} catch (SQLException e) {
+		e.printStackTrace();
+
+		return new ChosenWord[0];
+		}
+	}
+}
+--------------
+package models;
+
+public class ChosenWord {
+
+	private int id;
+	private String word;
+
+	public ChosenWord(int cId, String cWord) {
+		this.id = cId;
+		this.word = cWord;
+	}
+
+	public void setWord(String word) {
+		this.word = word;
+	}
+
+	public String getWord() {
+		return word;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return word;
+	}
+}
+-----------------------
+package persistence;
+
+import models.ChosenWord;
+
+public interface ChosenWordRepository {
+	
+	public ChosenWord[] findBy(int id);
+
+}
+-------------------------------
+package commons;
+
+public class Constants {
+	public static final String URL = "jdbc:sqlite:db/database.db";
+}
